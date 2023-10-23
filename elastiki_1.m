@@ -1,0 +1,114 @@
+function [ELT,x]=elastiki_1(Q1,Q2,M1,M2,q1,q2,q3,g,R1ola,R2ola,R3ola,EI,L);
+x1=linspace(0,L);
+x2=linspace(L,2.*L);
+x3=linspace(2.*L,3.*L);
+%Gia to proto aristero tmima:
+Fa=R1ola;
+qa=q1;
+La=L;
+Ma=0;
+X=x1;
+icounter=0;
+INT=simpson_get_g(Fa,qa,g,La,Ma,X,icounter);
+OT1=INT;
+%Gia to mesaio tmima:
+Fa=R2ola+Q1(100);
+qa=q2;
+La=L;
+Ma=M1(end);
+X=x2;
+icounter=1;
+INT=simpson_get_g(Fa,qa,g,La,Ma,X,icounter);
+OT2=INT;
+%Gia to akraio tmima sta deksia:
+Fa=R3ola+Q2(100);
+qa=q3;
+La=L;
+Ma=M2(end);
+X=x3;
+icounter=2;
+INT=simpson_get_g(Fa,qa,g,La,Ma,X,icounter);
+OT3=INT;
+%Ypologismos tora ton epomenon posotiton:
+Fa=R1ola;
+qa=q1;
+La=L;
+Lb=0;
+Ma=0;
+X=x1;
+icounter=0;
+%F=comp2(Fa,qa,g,La,Lb,Ma,L,icounter);
+%c11=-(1/L)*F;
+INT=simpson_get_gg(Fa,qa,g,La,Lb,Ma,X,icounter);
+OOT1=INT;
+F=OOT1(100)-OOT1(1);
+c11=-(1/L)*F;
+%Gia to mesaio tmima:
+Fa=R2ola+Q1(100);
+qa=q2;
+La=L;
+Lb=L;
+Ma=M1(end);
+X=x2;
+icounter=1;
+%F=comp2(Fa,qa,g,La,Lb,Ma,2*L,icounter);
+%c12=-(1/L)*F;
+INT=simpson_get_gg(Fa,qa,g,La,Lb,Ma,X,icounter);
+OOT2=INT;
+F=OOT2(100)-OOT2(1);
+c12=-(1/L)*F;
+%Gia to akraio tmima sta deksia:
+Fa=R3ola+Q2(100);
+qa=q3;
+La=L;
+Lb=2*L;
+Ma=M2(end);
+X=x3;
+icounter=2;
+%F=comp2(Fa,qa,g,La,Lb,Ma,3*L,icounter);
+%c13=-(1/L)*F;
+INT=simpson_get_gg(Fa,qa,g,La,Lb,Ma,X,icounter);
+OOT3=INT;
+F=OOT3(100)-OOT3(1);
+c13=-(1/(L))*F;
+%Ypologismos statheron c2:
+c21=0;
+%c22=0;
+%c23=0;
+%Ypologismos ypoloipon stahteron c2:
+c22=-c12*L;
+c23=-2*c13*L;
+%Parathesi tota ton elastikon grammon:
+ELT1=OOT1+c21+c11*x1;
+ELT2=OOT2+c22+c12*x2;
+ELT3=OOT3+c23+c13*x3;
+%c2=R1ola.*L.^2./6-g.*L.^3./24-(q1.*L^3)/24;
+%c4=(-q1+g).*L.^3/24-(q2+g).*L.^3./24+(R2ola.*L.^3)/6;
+%c3=-c4.*L;
+%c6=R3ola.*L.^2./6-((q3+g).*L.^3/24);
+%c5=-c6.*2.*L;
+%ELT1=OOT1+c2;
+%ELT2=OOT2+c3+c4;
+%ELT3=OOT3+c5+c6;
+ELT=[ELT1/EI,ELT2/EI,ELT3/EI];
+x=[x1,x2,x3];
+%OT1=cumtrapz(x1,-T1);
+%OOT1=cumtrapz(x1,OT1);
+%OT2=cumtrapz(x2,-T2);
+%OOT2=cumtrapz(x2,OT2);
+%OT3=cumtrapz(x3,-T3);
+%OOT3=cumtrapz(x3,OT3);
+%c2=R1ola.*L.^2./6-g.*L.^3./24-q1.*L^3./24;
+%c4=(-q1+g).*L.^3/24-(q2+g).*L.^3./24+R2ola.*L.^3./6;
+%c3=-c4.*L;
+%c6=R3ola.*L.^2./6-(q3+g).*L.^3./24;
+%c5=-c6.*2.*L;
+%ELT1=OOT1+c2;
+%ELT2=OOT2+c3+c4;
+%ELT3=OOT3+c5+c6;
+%disp(ELT1)
+%disp(ELT2)
+%disp(ELT3)
+%ELT=[ELT1.*EI,ELT2.*EI,ELT3.*EI];
+%x=[x1,x2,x3];
+end
